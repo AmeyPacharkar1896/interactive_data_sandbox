@@ -19,3 +19,4 @@ frontend/linux/flutter/ephemeral/
 .DS_Store
 *.log
 *.swp
+.vscode
