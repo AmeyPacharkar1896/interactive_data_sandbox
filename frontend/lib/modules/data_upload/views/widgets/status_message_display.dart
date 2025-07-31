@@ -67,9 +67,15 @@ class StatusMessageDisplay extends StatelessWidget {
                 leadingIcon,
                 const SizedBox(width: 8),
               ],
-              Text(
-                message,
-                style: TextStyle(color: textColor, fontWeight: FontWeight.w500),
+              Expanded(
+                child: Text(
+                  message,
+                  style: TextStyle(
+                    color: textColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
