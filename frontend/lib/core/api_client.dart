@@ -5,7 +5,6 @@ import 'package:frontend/core/api_exception.dart';
 import 'package:frontend/core/constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io'; // Required for SocketException
-import 'dart:developer'; // Required for log
 
 class ApiClient {
   final String _baseUrl;
@@ -25,19 +24,12 @@ class ApiClient {
     final uri = Uri.parse('$_baseUrl$path');
     final encodedBody = json.encode(body);
 
-    log('FLUTTER DEBUG: Sending POST request to: $uri');
-    log('FLUTTER DEBUG: Request Body: $encodedBody');
-
     try {
       final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},
         body: encodedBody,
       );
-
-      log('FLUTTER DEBUG: Received response from: $uri');
-      log('FLUTTER DEBUG: Status Code: ${response.statusCode}');
-      log('FLUTTER DEBUG: Response Body: ${response.body}');
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         try {

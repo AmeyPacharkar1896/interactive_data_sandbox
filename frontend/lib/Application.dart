@@ -1,7 +1,7 @@
-// frontend\lib\application.dart
+// frontend/lib/application.dart
 
 import 'package:flutter/material.dart';
-import 'package:frontend/modules/data_upload/views/data_upload_page.dart';
+import 'package:frontend/modules/data_upload/views/data_upload_page.dart'; // Ensure this import path is correct
 
 class Application extends StatelessWidget {
   const Application({super.key});
@@ -11,10 +11,41 @@ class Application extends StatelessWidget {
     return MaterialApp(
       title: "Interactive Data Science Sandbox",
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blue, // Primary color for buttons etc.
+        scaffoldBackgroundColor: const Color(
+          0xFFF3F4F6,
+        ), // Light gray background
+        cardTheme: CardTheme(
+          // Global card styling
+          elevation: 2, // Subtle shadow
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8), // Rounded corners
+          ),
+          margin:
+              EdgeInsets
+                  .zero, // Cards will handle their own margins via padding
+        ),
+        appBarTheme: const AppBarTheme(
+          // Minimal app bar
+          backgroundColor: Color(0xFFF3F4F6), // Match background
+          elevation: 0, // No shadow
+          foregroundColor: Colors.black87, // Dark text color
+          titleTextStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ), // Header font
+        ),
+        // Define default text styles if you use a specific font later (e.g., 'Inter' or 'Poppins')
+        // textTheme: const TextTheme(
+        //   bodyLarge: TextStyle(fontFamily: 'Inter'),
+        //   bodyMedium: TextStyle(fontFamily: 'Inter'),
+        //   // etc.
+        // ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner:
+          false, // <-- Add this line to remove the debug banner
       home: const DataUploadPage(),
     );
   }
