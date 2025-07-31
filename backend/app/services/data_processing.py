@@ -6,7 +6,7 @@ import hashlib
 from typing import Dict, List, Any
 
 from app.schemas.csv import ColumnInfo
-from app.data_store.in_memory_store import datasets # Access our in-memory store
+from app.data_store.in_memory_store import datasets 
 
 class DataProcessingService:
     def process_csv_upload(self, csv_content: str) -> Dict[str, Any]:
@@ -31,7 +31,9 @@ class DataProcessingService:
                 "column_info": column_info,
                 "sample_data": sample_data
             }
-        except Exception as e:
-            raise ValueError(f"Error processing CSV data: {e}")
+        except ParserError:
+            raise ValueError("Failed to parse CSV file. Please ensure it has a valid format (e.g., correct delimiters, no missing quotes).")
+        except Exception: 
+            raise ValueError("An unexpected internal error occurred during data processing. Please try again later.")
 
 data_processing_service = DataProcessingService()

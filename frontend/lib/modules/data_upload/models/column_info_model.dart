@@ -10,8 +10,8 @@ class ColumnInfoModel extends Equatable {
 
   factory ColumnInfoModel.fromJson(Map<String, dynamic> json) {
     return ColumnInfoModel(
-      name: json['name'] as String,
-      dtype: json['dtype'] as String,
+      name: json['name']?.toString() ?? 'Unnamed Column', 
+      dtype: json['dtype']?.toString() ?? 'unknown',      
     );
   }
 

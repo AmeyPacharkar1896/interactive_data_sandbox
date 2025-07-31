@@ -1,8 +1,8 @@
 // frontend\lib\modules\data_upload\services\data_upload_service.dart
 
 import 'package:frontend/core/api_client.dart';
+import 'package:frontend/core/api_endpoints.dart';
 import 'package:frontend/core/api_exception.dart';
-import 'package:frontend/core/constants.dart';
 import 'package:frontend/modules/data_upload/models/csv_upload_req_model.dart';
 import 'package:frontend/modules/data_upload/models/csv_upload_res_model.dart';
 
@@ -11,7 +11,7 @@ class DataUploadService {
   static DataUploadService? _instance;
 
   DataUploadService._internal()
-    : _apiClient = ApiClient(baseUrl: kBackendBaseUrl);
+    : _apiClient = ApiClient();
 
   factory DataUploadService() {
     _instance ??= DataUploadService._internal();
@@ -20,7 +20,7 @@ class DataUploadService {
   Future<CsvUploadResModel> uploadCsvData(CsvUploadReqModel request) async {
     try {
       final responseJson = await _apiClient.post(
-        '/api/v1/data/upload-data',
+        ApiEndpoints.uploadCsv,
         request.toJson(),
       );
       return CsvUploadResModel.fromJson(responseJson);

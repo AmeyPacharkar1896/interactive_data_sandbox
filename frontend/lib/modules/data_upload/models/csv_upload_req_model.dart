@@ -8,7 +8,7 @@ class CsvUploadReqModel extends Equatable {
   final String csvData;
 
   Map<String, dynamic> toJson() {
-    return {'csvData': csvData};
+    return {'csv_data': csvData};
   }
 
   @override

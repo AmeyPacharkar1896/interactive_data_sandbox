@@ -35,9 +35,9 @@ class DataUploadStateLoaded extends DataUploadState {
 }
 
 class DataUploadStateError extends DataUploadState {
-  final String error;
+  final String? error;
 
-  const DataUploadStateError({required this.error});
+  const DataUploadStateError({this.error});
 
   @override
   List<Object?> get props => [error];

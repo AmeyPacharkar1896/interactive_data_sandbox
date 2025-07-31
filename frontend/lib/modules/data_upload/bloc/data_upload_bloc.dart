@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/core/api_exception.dart';
 import 'package:frontend/modules/data_upload/models/csv_upload_req_model.dart';
 import 'package:frontend/modules/data_upload/models/csv_upload_res_model.dart';
 import 'package:frontend/modules/data_upload/services/data_upload_service.dart';
@@ -48,8 +49,23 @@ class DataUploadBloc extends Bloc<DataUploadEvent, DataUploadState> {
       final request = CsvUploadReqModel(csvData: csvContent);
       final response = await _dataUploadService.uploadCsvData(request);
       emit(DataUploadStateLoaded(uploadResponse: response, fileName: fileName));
+    } on ApiException catch (e) {
+      // <--- Catch ApiException specifically
+      emit(
+        DataUploadStateError(error: e.message),
+      ); // Use its guaranteed non-nullable message
+    } on Exception catch (e) {
+      // <--- Catch generic Exception
+      emit(
+        DataUploadStateError(error: e.toString()),
+      ); // Fallback for other Exceptions
     } catch (e) {
-      emit(DataUploadStateError(error: e.toString()));
+      // <--- Catch all other errors
+      emit(
+        DataUploadStateError(
+          error: 'An unexpected error occurred: ${e.toString()}',
+        ),
+      );
     }
   }
 }
