@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/modules/eda/bloc/eda_bloc.dart';
-import 'dart:developer'; // Import for log
+import 'package:frontend/modules/eda/bloc/eda_bloc.dart'; // For EdaBloc
+// NEW: Import ML Bloc and Event
+import 'package:frontend/modules/ml/bloc/ml_bloc.dart';
+import 'dart:developer';
 
 class PlotGeneratorCard extends StatefulWidget {
   final String? currentDatasetId;
@@ -18,6 +20,7 @@ class _PlotGeneratorCardState extends State<PlotGeneratorCard> {
   String? _selectedXFeature;
   String? _selectedYFeature;
   List<String> _numericalColumns = [];
+  int _nClusters = 3;
 
   @override
   void didUpdateWidget(covariant PlotGeneratorCard oldWidget) {
@@ -28,6 +31,7 @@ class _PlotGeneratorCardState extends State<PlotGeneratorCard> {
         _selectedXFeature = null;
         _selectedYFeature = null;
         _numericalColumns = [];
+        _nClusters = 3;
       });
     }
   }
@@ -43,6 +47,12 @@ class _PlotGeneratorCardState extends State<PlotGeneratorCard> {
     log(
       'PLOT GENERATOR CARD: Dropdowns enabled: ${widget.currentDatasetId != null && _numericalColumns.isNotEmpty}',
     );
+
+    bool _isPlottingEnabled =
+        (_selectedXFeature != null &&
+            _selectedYFeature != null &&
+            _selectedXFeature != _selectedYFeature &&
+            widget.currentDatasetId != null);
 
     return Card(
       child: Padding(
@@ -92,6 +102,7 @@ class _PlotGeneratorCardState extends State<PlotGeneratorCard> {
               child: const SizedBox.shrink(),
             ),
 
+            // X-Axis Dropdown
             _buildFeatureDropdown(
               label: 'X-Axis Feature (Numerical Only)',
               selectedValue: _selectedXFeature,
@@ -107,6 +118,7 @@ class _PlotGeneratorCardState extends State<PlotGeneratorCard> {
             ),
             const SizedBox(height: 15),
 
+            // Y-Axis Dropdown
             _buildFeatureDropdown(
               label: 'Y-Axis Feature (Numerical Only)',
               selectedValue: _selectedYFeature,
@@ -122,20 +134,50 @@ class _PlotGeneratorCardState extends State<PlotGeneratorCard> {
             ),
             const SizedBox(height: 20),
 
+            // K-Means N_Clusters Slider
+            const Text(
+              'K-Means Clustering:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: Slider(
+                    value: _nClusters.toDouble(),
+                    min: 2,
+                    max: 10,
+                    divisions: 8,
+                    label: _nClusters.round().toString(),
+                    onChanged:
+                        _isPlottingEnabled
+                            ? (double value) {
+                              setState(() {
+                                _nClusters = value.round();
+                              });
+                            }
+                            : null,
+                  ),
+                ),
+                Text('k = $_nClusters', style: const TextStyle(fontSize: 16)),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Run K-Means Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed:
-                    (_selectedXFeature != null &&
-                            _selectedYFeature != null &&
-                            _selectedXFeature != _selectedYFeature &&
-                            widget.currentDatasetId != null)
+                    _isPlottingEnabled
                         ? () {
-                          context.read<EdaBloc>().add(
-                            EdaEventGenerateScatterPlot(
+                          // --- CRITICAL FIX: Dispatch MlEventRunKMeans to MlBloc ---
+                          context.read<MlBloc>().add(
+                            MLEventRunKMeans(
                               datasetId: widget.currentDatasetId!,
                               featureX: _selectedXFeature!,
                               featureY: _selectedYFeature!,
+                              nClusters: _nClusters,
                             ),
                           );
                         }
@@ -148,7 +190,7 @@ class _PlotGeneratorCardState extends State<PlotGeneratorCard> {
                   ),
                 ),
                 child: const Text(
-                  'Generate Plot',
+                  'Run K-Means',
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
@@ -159,6 +201,7 @@ class _PlotGeneratorCardState extends State<PlotGeneratorCard> {
     );
   }
 
+  // Helper method to build a feature dropdown (no change)
   Widget _buildFeatureDropdown({
     required String label,
     required String? selectedValue,
