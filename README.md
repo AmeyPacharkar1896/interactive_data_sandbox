@@ -14,8 +14,6 @@ A desktop application providing an intuitive, visual playground for exploring fu
 
 ### 15-Second Demo
 
-**(INSTRUCTION: Replace the placeholder link below with the actual link to your hosted GIF. This is the most important part of the README.)**
-
 ![Sentry In Action GIF](https://github.com/user-attachments/assets/52bb2285-e26e-4f96-aeaa-5cb81fbdac1e)
 
 ---
