@@ -295,6 +295,16 @@ class PlotDisplayCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text('Total points: ${finalSpotsToRender.length}'),
+                      if (showCentroids &&
+                          mlState is MlStateKMeansLoaded &&
+                          mlState.kmeansResponse.silhouetteScore != null)
+                        Text(
+                          'Silhouette Score: ${mlState.kmeansResponse.silhouetteScore!.toStringAsFixed(3)}',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
                       if (showCentroids)
                         Text(
                           'Inertia: ${mlState is MlStateKMeansLoaded ? mlState.kmeansResponse.inertia.toStringAsFixed(2) : 'N/A'}',

@@ -8,11 +8,13 @@ class KMeansResponseModel extends Equatable {
   final List<KMeansPlotPointModel> plotData;
   final List<KMeansCentroidModel> centroids;
   final double inertia;
+  final double? silhouetteScore;
 
   const KMeansResponseModel({
     required this.plotData,
     required this.centroids,
     required this.inertia,
+    required this.silhouetteScore,
   });
 
   factory KMeansResponseModel.fromJson(Map<String, dynamic> json) {
@@ -34,9 +36,10 @@ class KMeansResponseModel extends Equatable {
               .toList() ??
           [],
       inertia: (json['inertia'] as num).toDouble(),
+      silhouetteScore: (json['silhouette_score'] as num?)?.toDouble(),
     );
   }
 
   @override
-  List<Object?> get props => [plotData, centroids, inertia];
+  List<Object?> get props => [plotData, centroids, inertia, silhouetteScore];
 }
